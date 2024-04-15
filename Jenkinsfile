@@ -12,9 +12,10 @@ pipeline {
             steps {
                 // Get some code from a GitHub repository
                 checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'github', url: 'https://github.com/CheonInJeong/simple-app.git']])
-                // Run Maven on a Unix agent.
-                 def pom = readMavenPom file: 'pom.xml'
-                 version = pom.version
+               def mvnHome = tool 'Maven'
+                version = sh(script: "${mvnHome}/bin/mvn help:evaluate -Dexpression=project.version -q -DforceStdout", returnStdout: true).trim()
+
+                echo "Maven project version is: ${version}"
 
                 echo "Maven project version is: ${version}"
                 sh "mvn -Dmaven.test.failure.ignore=true clean package"
