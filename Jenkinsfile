@@ -1,4 +1,3 @@
-def version
 pipeline {
     agent any
 
@@ -12,13 +11,7 @@ pipeline {
             steps {
                 // Get some code from a GitHub repository
                 checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'github', url: 'https://github.com/CheonInJeong/simple-app.git']])
-               def mvnHome = tool 'Maven'
-                version = sh(script: "${mvnHome}/bin/mvn help:evaluate -Dexpression=project.version -q -DforceStdout", returnStdout: true).trim()
-
-                echo "Maven project version is: ${version}"
-
-                echo "Maven project version is: ${version}"
-                sh "mvn -Dmaven.test.failure.ignore=true clean package"
+//                 sh "mvn -Dmaven.test.failure.ignore=true clean package"
 
             }
 
@@ -36,13 +29,20 @@ pipeline {
                 }
             }
         }
-        stage("Build Docker Image") {
+        stage("TEST") {
             steps {
                 script {
-                    sh 'docker build -t ijcheon/simple_app:0.1 .'
+                    sh 'echo test finished'
                 }
             }
         }
+//         stage("Build Docker Image") {
+//             steps {
+//                 script {
+//                     sh 'docker build -t ijcheon/simple_app:0.1 .'
+//                 }
+//             }
+//         }
 //         stage("Push Docker file") {
 //             steps {
 //                 withCredentials([usernameColonPassword(credentialsId: 'dockerhub', variable: 'dockerhub-pwd')]) {
