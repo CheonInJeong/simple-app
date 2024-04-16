@@ -11,7 +11,7 @@ pipeline {
     stages {
         stage('Check recent release') {
             steps {
-                  def latestTag = sh script: 'git describe --tags --abbrev=0', returnStdout: true
+                  latestTag = sh script: 'git describe --tags --abbrev=0', returnStdout: true
                   echo "Latest tag: ${latestTag}"
 
             }
