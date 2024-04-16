@@ -6,9 +6,22 @@ pipeline {
         maven "maven"
     }
 
+
+
     stages {
-        stage('Build Maven') {
+        stage('Check recent release') {
             steps {
+                  def latestTag = sh(script: "git describe --tags $(git rev-list --tags --max-count=1)", returnStdout: true).trim()
+                  echo "Latest tag: ${latestTag}"
+
+            }
+        }
+        stage('Build Maven') {
+            when {
+                buildingTag()
+            }
+            steps {
+                sh 'echo it is tag'
                 // Get some code from a GitHub repository
                 checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'github', url: 'https://github.com/CheonInJeong/simple-app.git']])
 //                 sh "mvn -Dmaven.test.failure.ignore=true clean package"
