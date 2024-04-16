@@ -1,3 +1,4 @@
+def latestTag
 pipeline {
     agent any
 
@@ -12,7 +13,7 @@ pipeline {
         stage('Check recent release') {
             steps {
                 script{
-                    def latestTag = sh script: 'git describe --tags --abbrev=0', returnStdout: true
+                     latestTag = sh script: 'git describe --tags --abbrev=0', returnStdout: true
                                   echo "Latest tag: ${latestTag}"
                 }
 
@@ -26,7 +27,7 @@ pipeline {
             steps {
                 sh 'echo it is tag'
                 // Get some code from a GitHub repository
-                checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'github', url: 'https://github.com/CheonInJeong/simple-app.git']])
+                checkout scmGit(branches: [[name: ${latestTag}]], extensions: [], userRemoteConfigs: [[credentialsId: 'github', url: 'https://github.com/CheonInJeong/simple-app.git']])
 //                 sh "mvn -Dmaven.test.failure.ignore=true clean package"
 
             }
